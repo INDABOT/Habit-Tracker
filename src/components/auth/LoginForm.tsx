@@ -35,7 +35,7 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
+    <div className="w-full max-w-md p-8 bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/50">
       <h2 className="text-2xl font-bold mb-6 text-center">Log In</h2>
       {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -48,7 +48,7 @@ export default function LoginForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full border p-2 rounded"
+            className="w-full border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none bg-white/50"
           />
         </div>
         <div>
@@ -60,13 +60,13 @@ export default function LoginForm() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full border p-2 rounded"
+            className="w-full border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none bg-white/50"
           />
         </div>
         <button
           type="submit"
           data-testid="auth-login-submit"
-          className="bg-blue-600 text-white p-2 rounded font-medium hover:bg-blue-700"
+          className="w-full bg-blue-600 text-white p-3 rounded-xl font-bold hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95 mt-2"
         >
           Log In
         </button>

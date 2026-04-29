@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} bg-gradient-to-br from-slate-50 to-slate-200 min-h-screen text-slate-800 antialiased`}>
         {children}
         {/* Registers the Service Worker on the client */}
         <script
