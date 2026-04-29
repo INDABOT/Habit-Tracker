@@ -1,0 +1,21 @@
+import { describe, it, expect } from 'vitest';
+import { validateHabitName } from '../../src/lib/validators';
+
+describe('validateHabitName', () => {
+  it('returns an error when habit name is empty', () => {
+    const result = validateHabitName('   ');
+    expect(result).toEqual({ valid: false, value: '', error: 'Habit name is required' });
+  });
+
+  it('returns an error when habit name exceeds 60 characters', () => {
+    const longName = 'a'.repeat(61);
+    const result = validateHabitName(longName);
+    expect(result.valid).toBe(false);
+    expect(result.error).toBe('Habit name must be 60 characters or fewer');
+  });
+
+  it('returns a trimmed value when habit name is valid', () => {
+    const result = validateHabitName('  Meditation  ');
+    expect(result).toEqual({ valid: true, value: 'Meditation', error: null });
+  });
+});

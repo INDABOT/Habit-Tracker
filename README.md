@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Habit Tracker PWA - Stage 3
 
-## Getting Started
+## Project Overview
+This is a mobile-first Progressive Web Application (PWA) built for the Frontend Wizards Stage 3 task. It is a strictly deterministic habit tracker that allows users to create an account, log in, manage daily habits, track streaks, and use the application offline. 
 
-First, run the development server:
+## Setup & Run Instructions
+1. Clone the repository: `git clone [YOUR_REPO_URL]`
+2. Install dependencies: `npm install`
+3. Run the development server: `npm run dev`
+4. Open `http://localhost:3000` in your browser.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Test Instructions
+The application is fully covered by automated tests per the Technical Requirements Document.
+* **Unit Tests:** `npm run test:unit` (Generates coverage report)
+* **Integration Tests:** `npm run test:integration`
+* **End-to-End Tests:** `npm run test:e2e` (Requires Playwright browsers: `npx playwright install`)
+* **Run All:** `npm run test`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Local Persistence Structure
+The application relies entirely on `localStorage` to simulate a deterministic database environment.
+* `habit-tracker-users`: Stores an array of registered user objects (id, email, password, createdAt).
+* `habit-tracker-session`: Stores the active user session (userId, email) or `null` if logged out.
+* `habit-tracker-habits`: Stores all habits across all users. The UI filters this list to ensure users only see habits matching their specific `userId`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## PWA Implementation
+The app functions as a basic installable PWA capable of offline rendering.
+* **Manifest:** A `manifest.json` file is served from the `public` directory defining the app shell, standalone display mode, and necessary 192px/512px icons.
+* **Service Worker:** A vanilla Javascript service worker (`sw.js`) caches the core routes (`/`, `/login`, `/signup`, `/dashboard`) on install. It intercepts fetch requests to serve the cached app shell when offline, preventing hard browser crashes.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Trade-offs & Limitations
+* **Local Auth:** Passwords are saved in plain text in `localStorage` strictly to satisfy the deterministic local-testing requirements of this stage. 
+* **JSDOM Crypto:** The integration test environment requires a global stub for `crypto.randomUUID()` as the virtual JSDOM environment does not natively support it like modern browsers do.
 
-## Learn More
+## Test Mapping
+Here is how the automated test suite verifies the required behaviors:
 
-To learn more about Next.js, take a look at the following resources:
+**Unit Tests (`tests/unit/`)**
+* `slug.test.ts`: Verifies string normalization and formatting for habit test IDs.
+* `validators.test.ts`: Ensures habit names meet the 60-character limit and are not empty.
+* `streaks.test.ts`: Validates the mathematical logic for calculating consecutive calendar days backwards from today.
+* `habits.test.ts`: Verifies the immutable toggling of completion dates within a habit object.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Integration Tests (`tests/integration/`)**
+* `auth-flow.test.tsx`: Simulates user input to verify signups, logins, duplicate email rejections, and `localStorage` session creation.
+* `habit-form.test.tsx`: Validates DOM interactions for creating, editing (preserving immutable fields), deleting (with explicit confirmation), and instantly updating UI streaks.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**End-to-End Tests (`tests/e2e/app.spec.ts`)**
+* Uses a headless Chromium browser to navigate the Next.js routes, verify splash screen timing, protect the `/dashboard` route, validate state persistence across page reloads, and confirm the offline service worker successfully serves the cached app shell without an internet connection.
