@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link'; // <-- ADD THIS IMPORT
 import { User, Session } from '@/types/auth';
 
 export default function SignupForm() {
@@ -25,7 +26,7 @@ export default function SignupForm() {
     const newUser: User = {
       id: crypto.randomUUID(),
       email,
-      password, // Note: Local testing only per TRD
+      password, 
       createdAt: new Date().toISOString(),
     };
 
@@ -77,6 +78,17 @@ export default function SignupForm() {
           Sign Up
         </button>
       </form>
+
+      {/*  NEW SECTION */}
+      <div className="mt-4 text-center">
+        <p className="text-sm text-gray-600">
+          Already have an account?{' '}
+          <Link href="/login" className="text-blue-600 hover:underline">
+            Log In
+          </Link>
+        </p>
+      </div>
+
     </div>
   );
 }

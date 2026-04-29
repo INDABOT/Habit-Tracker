@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link'; // <-- ADD THIS IMPORT
 import { User, Session } from '@/types/auth';
 
 export default function LoginForm() {
@@ -70,6 +71,17 @@ export default function LoginForm() {
           Log In
         </button>
       </form>
+      
+      {/*  NEW SECTION */}
+      <div className="mt-4 text-center">
+        <p className="text-sm text-gray-600">
+          Don't have an account?{' '}
+          <Link href="/signup" className="text-blue-600 hover:underline">
+            Sign Up
+          </Link>
+        </p>
+      </div>
+
     </div>
   );
 }
